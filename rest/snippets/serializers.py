@@ -46,6 +46,47 @@ class SnippetSerializer(serializers.Serializer):
         return instance
     
 
+# more short serializer definition that previous
+# based on ModelSerializer
+class SnippetSerializerShort(serializers.ModelSerializer):
+    class Meta:
+        model = Snippet
+        fields = ['id', 'title', 'code', 'linenos', 'language', 'style']
+
+    def create(self, validated_data):
+        """ 
+        Create new instance of the model
+    
+        :type validated_data:
+        :param validated_data: 
+    
+        :rtype: :class:Snippet
+        """    
+        return Snippet.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        """ 
+        Update existing instance
+    
+        :type instance:
+        :param instance:
+    
+        :type validated_data:
+        :param validated_data:
+    
+        :rtype:
+        """
+        instance.title   = validated_data.get('title', instance.title)
+        instance.code    = validated_data.get('code', instance.code)
+        instance.linenos = validated_data.get('linenos', instance.linenos)
+        instance.language = validated_data.get('language', instance.language)
+        instance.style   = validated_data.get('style', instance.style)
+
+        instance.save()
+
+        return instance
+    
+
 # Actions with serializers
 # 
 # import io
