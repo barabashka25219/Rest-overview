@@ -38,12 +38,16 @@ from rest_framework import generics
 # Представление на основе класса APIView
 class BasketViewList(views.APIView):
     parser_classes = [parsers.JSONParser,]
-    renderer_classes = [renderers.JSONRenderer,]
+    renderer_classes = [
+        renderers.JSONRenderer,
+        renderers.TemplateHTMLRenderer]
     
     def get(self, request, format=None):
         baskets = Basket.objects.all()
         serializer = BasketSerializer(baskets, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response = Response(serializer.data, template_name='basketviewlist.html', status=status.HTTP_200_OK)
+        response.data = {'results': response.data}
+        return response
     
     def post(self, request, format=None):
         serializer = BasketSerializer(data=request.data)
@@ -66,8 +70,16 @@ class FeedBackViewList(mixins.ListModelMixin,
                        generics.GenericAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
-    parser_classes = [parsers.JSONParser,]          # мы можем не указывать парсеры и рендереры,
-    renderer_classes = [renderers.JSONRenderer,]    # если они определены в settings.py->DEFAULT_{NAME}_CLASSES
+    parser_classes = [parsers.JSONParser,]               # мы можем не указывать парсеры и рендереры,
+    renderer_classes = [renderers.JSONRenderer,
+                        renderers.TemplateHTMLRenderer]  # если они определены в settings.py->DEFAULT_{NAME}_CLASSES
+    
+    template_name = 'feedbackviewlist.html'
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {'feedbacks': response.data}
+        return response
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -83,8 +95,16 @@ class FeedBackViewList(mixins.ListModelMixin,
 class FeedbackViewRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
+    renderer_classes = [renderers.JSONRenderer,
+                        renderers.TemplateHTMLRenderer]
+    
     lookup_field = 'pk' # для примера
+    template_name = 'feedbackdetail.html'
 
+    def retrieve(self, request, *args, **kwargs):
+        feedback = super().retrieve(request, *args, **kwargs)
+        feedback.data = {'feedback': feedback.data}
+        return feedback
     
 # http POST http://127.0.0.1:8000/users/basket/ \
 # product[id]=1 \

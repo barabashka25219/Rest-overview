@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Feedback: {{feedback.user.username}} </h1>
+
+    <p>
+        {{feedback.grade}}
+    </p>
+    <p>
+        {{feedback.text}}
+    </p>
+{% endblock %}

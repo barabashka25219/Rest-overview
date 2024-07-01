@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Basket list</h1>
+    {% for basket in results %}
+        <h2>User "{{basket.user.username}}"</h2>
+        <p>
+            <ul>
+                <li>
+                    <p>
+                        {{basket.product.name}}
+                    </p>
+                    <p>
+                        {{basket.product.description}}
+                    </p>
+                    <p>
+                        ${{basket.product.price}}
+                    </p>
+                </li>
+            </ul>
+        </p>
+    {% endfor %}
+{% endblock content %}

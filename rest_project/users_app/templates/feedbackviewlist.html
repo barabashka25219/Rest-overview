@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Feedbacks from users</h1>
+
+    {% for feedback in feedbacks %}
+        <h2>
+            {{feedback.user.username}}
+        </h2>
+        <ul>
+            <li>
+                <p>
+                    {{feedback.product.name}}
+                </p>
+                <p>
+                    {{feedback.grade}}
+                </p>
+                <p>
+                    {{feedback.text}}
+                </p>
+            </li>
+        </ul>
+    {% endfor %}
+{% endblock %}
